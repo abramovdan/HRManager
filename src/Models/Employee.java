@@ -1,13 +1,16 @@
 package Models;
 
+import java.util.UUID;
+
 public class Employee {
-	private long id;
+	private UUID id;
 	private String name;
 	private Department department;
 	private String phoneNumber;
 	private double salary;
 	
 	public Employee(String n) {
+		id = UUID.randomUUID();
 		name = n;
 	}
 
@@ -43,7 +46,7 @@ public class Employee {
 		this.salary = salary;
 	}
 
-	public long getId() {
+	public UUID getId() {
 		return id;
 	}
 }
