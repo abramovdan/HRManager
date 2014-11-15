@@ -1,17 +1,18 @@
-package Models;
+package models;
 
 import java.util.UUID;
 
 public class Employee {
 	private UUID id;
 	private String name;
-	private Department department;
+	private UUID departmentId;
 	private String phoneNumber;
 	private double salary;
 	
-	public Employee(String n) {
+	public Employee(String name, double salary) {
 		id = UUID.randomUUID();
-		name = n;
+		this.name = name;
+		this.salary = salary;
 	}
 
 	public String getName() {
@@ -22,12 +23,12 @@ public class Employee {
 		this.name = name;
 	}
 
-	public Department getDepartment() {
-		return department;
+	public UUID getDepartmentId() {
+		return departmentId;
 	}
 
-	public void setDepartment(Department department) {
-		this.department = department;
+	public void setDepartmentId(UUID departmentId) {
+		this.departmentId = departmentId;
 	}
 
 	public String getPhoneNumber() {
