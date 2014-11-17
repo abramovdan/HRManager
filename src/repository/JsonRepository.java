@@ -19,20 +19,24 @@ public class JsonRepository<T extends SimpleEntity&JsonSerializable<T>> implemen
 	
 	@Override
 	public Collection<T> entities() {
-		//TODO: возможно ли получить аннотацию из T ?
+		T t = null;
+		String path = getPath(t.getClass());
+		
 		
 		return null;
+		
 	}
 
 	@Override
 	public void create(T entity) {
-		String path = getPath(entity);
+		Class cl = entity.getClass();
+		String path = getPath(cl);
 		File dir = new File(path);
 		if (!dir.exists()){
 			dir.mkdir();
 		}
 		JSON jsonObject = entity.toJSON();
-		File file = new File(path + "/" + entity.getId() + ".json");
+		File file = new File(path + "/" + cl.getSimpleName() + "_" + entity.getId() + ".json");
 		try{
 			FileUtils.writeStringToFile(file, jsonObject.toString());
 		   }catch(Exception ex){
@@ -52,8 +56,7 @@ public class JsonRepository<T extends SimpleEntity&JsonSerializable<T>> implemen
 		
 	}
 	
-	private String getPath(T entity){
-		Class<?> cl = entity.getClass();
+	private String getPath(Class<?> cl){
 		if (!cl.isAnnotationPresent(JsonDAO.class)){
 			return defaultDir;
 		}
