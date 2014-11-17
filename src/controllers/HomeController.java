@@ -9,10 +9,10 @@ import views.*;
 
 public class HomeController {
 	
-	private DepartmentRepository departmentRepository;
-	private EmployeeRepository employeeRepository;
+	private Repository<Department> departmentRepository;
+	private Repository<Employee> employeeRepository;
 	
-	public HomeController(EmployeeRepository employeeRepo, DepartmentRepository departmentRepo) {
+	public HomeController(Repository<Employee> employeeRepo, Repository<Department> departmentRepo) {
 		employeeRepository = employeeRepo;
 		departmentRepository = departmentRepo;
 		HomeView homeView;
@@ -43,10 +43,10 @@ public class HomeController {
 		AddEmployeeView addEmployeeView = new AddEmployeeView();
 		Employee employee = new Employee(addEmployeeView.getName(), addEmployeeView.getSalary());
 		employee.setPhoneNumber(addEmployeeView.getPhoneNumber());
-		Department department = departmentRepository.getDepartmentByName(addEmployeeView.getDepartment());
-		if (department!=null) {
-			employee.setDepartmentId(department.getId());
-		}
+		//Department department = departmentRepository.getDepartmentByName(addEmployeeView.getDepartment());
+		//if (department!=null) {
+		//	employee.setDepartmentId(department.getId());
+		//}
 		employeeRepository.create(employee);
 	}
 }

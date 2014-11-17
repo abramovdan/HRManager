@@ -1,15 +1,18 @@
 package models;
 
+import java.util.Collection;
 import java.util.UUID;
 
-public class Department {
-	private UUID id;
+import net.sf.json.JSON;
+import repository.JsonSerializable;
+import annotations.JsonDAO;
+import annotations.JsonDependent;
+
+@JsonDAO(path="/department/")
+
+public class Department extends SimpleEntity implements JsonSerializable<Department>{
 	private String name;
 	private UUID chiefId;
-	
-	public Department() {
-		id = UUID.randomUUID();
-	}
 	
 	public String getName() {
 		return name;
@@ -27,7 +30,15 @@ public class Department {
 		this.chiefId = chiefId;
 	}
 
-	public UUID getId() {
-		return id;
+	@Override
+	public JSON toJSON() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<Department> findByParent(UUID parentUUID) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
