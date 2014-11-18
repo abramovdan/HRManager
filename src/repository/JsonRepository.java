@@ -19,9 +19,6 @@ public class JsonRepository<T extends SimpleEntity&JsonSerializable<T>> implemen
 	
 	@Override
 	public Collection<T> entities() {
-		T t = null;
-		String path = getPath(t.getClass());
-		
 		
 		return null;
 		
