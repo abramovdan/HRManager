@@ -1,4 +1,4 @@
-package enums;
+package hrmanager.enums;
 
 public enum Command {
 	ADDEMPLOYEE, EDITEMPLOYEE, SHOWEMPLOYEES, FINDEMPLOYEE,

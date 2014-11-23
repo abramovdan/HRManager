@@ -1,9 +1,10 @@
-package views;
+package hrmanager.views;
+
+import hrmanager.enums.Command;
 
 import java.io.*;
 import java.util.*;
 
-import enums.Command;
 
 public class HomeView {
 	private Command command;

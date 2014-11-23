@@ -1,4 +1,6 @@
-package views;
+package hrmanager.views;
+
+import hrmanager.models.Department;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +8,6 @@ import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.UUID;
 
-import models.Department;
 
 public class AddEmployeeView {
 	private UUID id;

@@ -1,11 +1,14 @@
-package controllers;
+package hrmanager.controllers;
 
+import hrmanager.enums.Command;
+import hrmanager.models.*;
+import hrmanager.views.*;
+
+import java.util.Collection;
 import java.util.UUID;
 
-import enums.Command;
-import repository.*;
-import models.*;
-import views.*;
+import jsonrepository.repository.*;
+
 
 public class HomeController {
 	
@@ -30,6 +33,9 @@ public class HomeController {
 				//editEmployee();
 				break;
 				
+			case SHOWEMPLOYEES:
+				showEmployees();
+				break;
 				//TODO: other commands
 				
 			default:
@@ -39,6 +45,11 @@ public class HomeController {
 		
 	}
 	
+	private void showEmployees() {
+		Collection<Employee> employees = employeeRepository.entities();
+		EmployeesView employeesView = new EmployeesView(employees);
+	}
+
 	public void addEmployee(){
 		AddEmployeeView addEmployeeView = new AddEmployeeView();
 		Employee employee = new Employee(addEmployeeView.getName(), addEmployeeView.getSalary());

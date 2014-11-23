@@ -1,30 +1,21 @@
-package models;
+package hrmanager.models;
 
-import java.util.Collection;
 import java.util.UUID;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
-import net.sf.json.JSON;
-import net.sf.json.JSONSerializer;
-import net.sf.json.util.JSONBuilder;
-import repository.JsonSerializable;
-import annotations.JsonDAO;
+import jsonrepository.annotations.JsonDAO;
 
 @JsonDAO(path="employees")
-public class Employee extends SimpleEntity implements JsonSerializable<Employee>{
+public class Employee extends SimpleEntity {
 	
 	@NotNull(message = "Name must be not null")
 	private String name;
 	private UUID departmentId;
 	private String phoneNumber;
 	private double salary;
+	
+	public Employee(){}
 	
 	public Employee(String name, double salary) {
 		this.name = name;
@@ -64,14 +55,12 @@ public class Employee extends SimpleEntity implements JsonSerializable<Employee>
 	}
 
 	@Override
-	public JSON toJSON() {
-		JSONSerializer jsonSerializer = new JSONSerializer();
-		return jsonSerializer.toJSON(this);
+	public UUID getParentId() {
+		return getDepartmentId();
+	}
+	
+	public void setParentId(UUID parentId){
+		setDepartmentId(parentId);
 	}
 
-	@Override
-	public Collection<Employee> findByParent(UUID parentUUID) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

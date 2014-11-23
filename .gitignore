@@ -6,6 +6,7 @@
 .project
 .metadata
 bin/**
+json_dir/**
 tmp/**
 tmp/**/*
 *.tmp
