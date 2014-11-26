@@ -1,4 +1,4 @@
-package hrmanager.views;
+package hrmanager.views.employee;
 
 import hrmanager.models.Department;
 

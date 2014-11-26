@@ -1,4 +1,4 @@
-package hrmanager.views;
+package hrmanager.views.employee;
 
 import java.io.BufferedReader;
 import java.io.IOException;
