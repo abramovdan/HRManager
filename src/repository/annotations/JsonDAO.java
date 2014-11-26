@@ -1,4 +1,4 @@
-package jsonrepository.annotations;
+package repository.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

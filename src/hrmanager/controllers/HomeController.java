@@ -7,7 +7,8 @@ import hrmanager.views.*;
 import java.util.Collection;
 import java.util.UUID;
 
-import jsonrepository.repository.*;
+import repository.JsonRepository;
+import repository.Repository;
 
 
 public class HomeController {
@@ -28,6 +29,10 @@ public class HomeController {
 			case ADDEMPLOYEE:
 				addEmployee();
 				break;
+				
+			case DELETEEMPLOYEE:
+				deleteEmployee();
+				break;
 			
 			case EDITEMPLOYEE:
 				//editEmployee();
@@ -37,7 +42,7 @@ public class HomeController {
 				showEmployees();
 				break;
 				//TODO: other commands
-				
+			
 			default:
 				break;
 			}
@@ -45,6 +50,24 @@ public class HomeController {
 		
 	}
 	
+	private void deleteEmployee() {
+		DeleteEmployeeView deleteEmployeeView = new DeleteEmployeeView();
+		String targetName = deleteEmployeeView.getName();
+		if (targetName == null || "".equals(targetName)){
+			MessageView messageView = new MessageView("There are no employees with such name. Press enter to continue.");
+			return;
+		} else {
+			for (Employee emp : employeeRepository.entities()) {
+				if (targetName.equals(emp.getName())) {
+					employeeRepository.delete(emp);
+					MessageView messageView = new MessageView("Employee " + emp.getName() + " was deleted. Press enter to continue.");
+					return;
+				}
+				MessageView messageView = new MessageView("There are no employees with such name. Press enter to continue.");
+			};
+		}
+	}
+
 	private void showEmployees() {
 		Collection<Employee> employees = employeeRepository.entities();
 		EmployeesView employeesView = new EmployeesView(employees);

@@ -1,4 +1,5 @@
-import jsonrepository.repository.*;
+import repository.JsonRepository;
+import repository.Repository;
 import hrmanager.controllers.*;
 import hrmanager.models.*;
 

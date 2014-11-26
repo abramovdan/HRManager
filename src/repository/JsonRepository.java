@@ -1,18 +1,19 @@
-package jsonrepository.repository;
+package repository;
 
 import hrmanager.models.SimpleEntity;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.*;
-
-import jsonrepository.annotations.JsonDAO;
 
 import org.apache.commons.io.*;
 
+import repository.annotations.JsonDAO;
+import repository.annotations.JsonDependent;
 import net.sf.json.*;
 import net.sf.json.util.PropertyFilter;
 
-public class JsonRepository<T extends JsonRepositoryObject> implements Repository<T> {
+public class JsonRepository<T extends SimpleEntity> implements Repository<T> {
 
 	public static final String JSON_CONTAINER_DIR = "json_dir";
 	private Class<T> entityClass;
@@ -27,7 +28,8 @@ public class JsonRepository<T extends JsonRepositoryObject> implements Repositor
 	public Collection<T> entities() {
 		List<T> entities = new ArrayList<T>();
 		File dir = new File(JSON_CONTAINER_DIR + File.separator + getEntityDirPath());
-
+		if (!dir.exists()) return entities;
+		
 		for (File f : FileUtils.listFiles(dir, new String[] {"json"}, false)) {
 			String json;
 			try {
@@ -51,7 +53,7 @@ public class JsonRepository<T extends JsonRepositoryObject> implements Repositor
 	@Override
 	public void update(T entity) {
 		File file = getEntityFile(entity);
-		JSON jsonObject = entity.toJSON();
+		JSON jsonObject = toJSON(entity);
 		try{
 			FileUtils.writeStringToFile(file, jsonObject.toString());
 		   }catch(Exception ex){
@@ -61,15 +63,31 @@ public class JsonRepository<T extends JsonRepositoryObject> implements Repositor
 
 	@Override
 	public void delete(T entity) {
-		getEntityFile(entity).delete();
+		if (entityClass.isAnnotationPresent(JsonDependent.class)){
+			Class[] classes = entityClass.getAnnotation(JsonDependent.class).value();
+			for (Class cl : classes) {
+				Repository<SimpleEntity> repository = new JsonRepository<SimpleEntity>(cl);
+				Collection<SimpleEntity> itemsToDelete = repository.findByParent(entity.getId());
+				for (SimpleEntity itemToDelete : itemsToDelete) {
+					repository.delete(itemToDelete);
+				}
+			}
+		}
+		File file = getEntityFile(entity);
+		if (file.exists()) {
+			file.delete();
+		}
 	}
 	
-	
-
 	@Override
 	public Collection<T> findByParent(UUID parentUUID) {
-		// TODO Auto-generated method stub
-		return null;
+		Collection<T> result = new ArrayList<T>();
+		for (T entity : entities()) {
+			if (parentUUID.equals(entity.getParentId())){
+				result.add(entity);
+			}
+		}
+		return result;
 	}
 	
 	private File getEntityFile(T entity) {
@@ -100,5 +118,9 @@ public class JsonRepository<T extends JsonRepositoryObject> implements Repositor
 		      return false;  
 		   }  
 		}); 
+	}
+	
+	private JSON toJSON(T entity) {
+		return JSONObject.fromObject(entity);
 	}
 }

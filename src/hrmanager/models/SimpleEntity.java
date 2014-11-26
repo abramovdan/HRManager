@@ -2,15 +2,11 @@ package hrmanager.models;
 
 import java.util.UUID;
 
-import net.sf.json.JSON;
-import net.sf.json.JSONObject;
 
-import jsonrepository.repository.JsonRepositoryObject;
-
-
-public abstract class SimpleEntity implements JsonRepositoryObject
+public abstract class SimpleEntity
 {
 	protected UUID id;
+	protected UUID parentId;
 
 	public SimpleEntity(){
 		id = UUID.randomUUID();
@@ -24,8 +20,11 @@ public abstract class SimpleEntity implements JsonRepositoryObject
 		this.id = uuid; 
 	}
 
-	@Override
-	public JSON toJSON() {
-		return JSONObject.fromObject(this);
+	public UUID getParentId(){
+		return parentId;
+	};
+	
+	public void setParentId(UUID parentIt){
+		this.parentId = parentId;
 	}
 }

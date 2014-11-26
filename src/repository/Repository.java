@@ -1,4 +1,4 @@
-package jsonrepository.repository;
+package repository;
 
 import java.util.Collection;
 import java.util.UUID;

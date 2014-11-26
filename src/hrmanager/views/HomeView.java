@@ -46,9 +46,11 @@ public class HomeView {
 		commandTable.put("showEmployees", command.SHOWEMPLOYEES);
 		commandTable.put("addEmployee", command.ADDEMPLOYEE);
 		commandTable.put("editEmployee", command.EDITEMPLOYEE);
+		commandTable.put("deleteEmployee", command.DELETEEMPLOYEE);
 		commandTable.put("findEmployee", command.FINDEMPLOYEE);
 		commandTable.put("showDepartments", command.SHOWDEPARTMENTS);
 		commandTable.put("addDepatment", command.ADDDEPARTMENT);
+		commandTable.put("deleteDepartment", command.DELETEDEPARTMENT);
 		commandTable.put("editDepartment", command.EDITDEPARTMENT);
 		commandTable.put("findDepartment", command.FINDDEPARTMENT);
 		commandTable.put("exit", command.EXIT);

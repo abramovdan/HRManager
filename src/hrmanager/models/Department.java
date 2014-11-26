@@ -2,8 +2,8 @@ package hrmanager.models;
 
 import java.util.UUID;
 
-import jsonrepository.annotations.JsonDAO;
-import jsonrepository.annotations.JsonDependent;
+import repository.annotations.JsonDAO;
+import repository.annotations.JsonDependent;
 
 @JsonDAO(path="/department/")
 @JsonDependent({Employee.class})

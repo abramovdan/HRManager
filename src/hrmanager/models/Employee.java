@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
-import jsonrepository.annotations.JsonDAO;
+import repository.annotations.JsonDAO;
 
 @JsonDAO(path="employees")
 public class Employee extends SimpleEntity {
@@ -59,6 +59,7 @@ public class Employee extends SimpleEntity {
 		return getDepartmentId();
 	}
 	
+	@Override
 	public void setParentId(UUID parentId){
 		setDepartmentId(parentId);
 	}
