@@ -11,9 +11,9 @@ import hrmanager.views.employee.EmployeesView;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
+import java.util.Iterator;
+import java.util.Scanner;
 
-import repository.JsonRepository;
 import repository.Repository;
 
 
@@ -25,12 +25,15 @@ public class HomeController {
 	public HomeController(Repository<Employee> employeeRepo, Repository<Department> departmentRepo) {
 		employeeRepository = employeeRepo;
 		departmentRepository = departmentRepo;
-		HomeView homeView;
 		Command command;
 		do {
-			homeView = new HomeView();
-			command = homeView.getCommand();
+			HomeView.printAvailableCommands();
+
+			Scanner scanner = getScanner();
+			String selectedCommand = scanner.next();
+			command = Command.fromString(selectedCommand);
 			if (command==null) continue;
+
 			switch (command) {
 			case ADDEMPLOYEE:
 				addEmployee();
@@ -58,6 +61,10 @@ public class HomeController {
 		} while (command != Command.EXIT);
 		
 	}
+
+	private Scanner getScanner() {
+		return new Scanner(System.in);
+	}
 	
 	private void AddDepartment() {
 		AddDepartmentView addDepartmentView = new AddDepartmentView();
@@ -74,67 +81,117 @@ public class HomeController {
 		departmentRepository.create(department);
 	}
 
-	private void editEmployee() {
-		EditEmployeeView editEmployeeView = new EditEmployeeView();
-		String targetName = editEmployeeView.getName();
-		Collection<Employee> employeesToEdit = findEmployeesByName(targetName, employeeRepository.entities());
-		if (employeesToEdit.size() > 0) {
-			Employee targetEmployee = employeesToEdit.iterator().next();
-			editEmployeeView.getEmployeeDetails();
-			//TODO: add validation of model fields
-			targetEmployee.setName(editEmployeeView.getName());
-			targetEmployee.setSalary(editEmployeeView.getSalary());
-			targetEmployee.setPhoneNumber(editEmployeeView.getPhoneNumber());
-			Collection<Department> departments = findDepartmentByName(editEmployeeView.getDepartment(), departmentRepository.entities());
-			if (departments.size() > 0) {
-				targetEmployee.setDepartmentId(departments.iterator().next().getId());
-			} else {
-				//add validation error
-			}
-			employeeRepository.update(targetEmployee);
+	public void addEmployee() {
+		AddEmployeeView view = new AddEmployeeView();
+		Scanner scanner = getScanner();
+		Employee employee = new Employee();
+
+		view.printEditEmployeeName();
+		String name = scanner.next();
+		employee.setName(name);
+
+		view.printEditEmployeeSalary();
+		long salary = scanner.nextLong();
+		employee.setSalary(salary);
+
+		view.printEditEmployeePhone();
+		String phoneNumber = scanner.next();
+		employee.setPhoneNumber(phoneNumber);
+
+		view.printEditEmployeeDepartment();
+		String depName = scanner.next();
+		scanner.nextLine();
+
+		Collection<Department> dep = findDepartmentByName(depName, departmentRepository.entities());
+		Iterator<Department> it = dep.iterator();
+		if (it.hasNext()) {
+			employee.setDepartmentId(it.next().getId());
 		} else {
-			MessageView messageView = new MessageView("There are no employees with such name. Press enter to continue.");
+			view.printNoSuchDepartmentWarnMsg();
 		}
 
+		employeeRepository.create(employee);
+		view.printOperationCompleted();
+		scanner.nextLine();
+	}
+
+	private void editEmployee() {
+		EditEmployeeView view = new EditEmployeeView();
+		Scanner scanner = getScanner();
+
+		view.printEditTargetEmployeeName();
+		String targetName = scanner.next();
+		Collection<Employee> employeesToEdit = findEmployeesByName(targetName, employeeRepository.entities());
+		if (!employeesToEdit.iterator().hasNext()) {
+			view.printNoSuchEmployeeWarnMsg();
+			scanner.nextLine();
+			return;
+		}
+
+		Employee employee = employeesToEdit.iterator().next();
+
+		view.printEditEmployeeName();
+		String name = scanner.next();
+		employee.setName(name);
+
+		view.printEditEmployeeSalary();
+		long salary = scanner.nextLong();
+		employee.setSalary(salary);
+
+		view.printEditEmployeePhone();
+		String phoneNumber = scanner.next();
+		employee.setPhoneNumber(phoneNumber);
+
+		view.printEditEmployeeDepartment();
+		String depName = scanner.next();
+		scanner.nextLine();
+
+		Collection<Department> dep = findDepartmentByName(depName, departmentRepository.entities());
+		Iterator<Department> it = dep.iterator();
+		if (it.hasNext()) {
+			employee.setDepartmentId(it.next().getId());
+		} else {
+			view.printNoSuchDepartmentWarnMsg();
+		}
+
+		employeeRepository.update(employee);
+		view.printOperationCompleted();
+		scanner.nextLine();
 	};
 
 	private void deleteEmployee() {
-		DeleteEmployeeView deleteEmployeeView = new DeleteEmployeeView();
-		String targetName = deleteEmployeeView.getName();
+		DeleteEmployeeView view = new DeleteEmployeeView();
+		Scanner scanner = getScanner();
+		view.printDeleteEmployeeName();
+
+		String targetName = scanner.next();
 		Collection<Employee> employeesToDelete = findEmployeesByName(targetName, employeeRepository.entities());
-		if (employeesToDelete.size() > 0){
-			for (Employee employee : employeesToDelete) {
-				employeeRepository.delete(employee);
-			}
-			MessageView messageView = new MessageView("Employees with name " + targetName + " were deleted. Press enter to continue.");
+		if (!employeesToDelete.iterator().hasNext()){
+			view.printNoSuchEmployeeWarnMsg();
+			scanner.nextLine();
 			return;
-		} else {
-			MessageView messageView = new MessageView("There are no employees with such name. Press enter to continue.");
 		}
+
+		Employee targetEmployee = employeesToDelete.iterator().next();
+		for (Employee employee : employeesToDelete) {
+			employeeRepository.delete(employee);
+		}
+		view.printOperationCompleted();
+		scanner.nextLine();
 	};
 
 	private void showEmployees() {
 		Collection<Employee> employees = employeeRepository.entities();
+		Scanner scanner = getScanner();
+		EmployeesView view = new EmployeesView(employees);
 		if (employees.size() > 0){
-			EmployeesView employeesView = new EmployeesView(employees);
-			MessageView messageView = new MessageView("Press enter to continue.");
+			view.printEmployees();
 		} else {
-			MessageView messageView = new MessageView("There are no added employees. Press enter to continue.");
+			view.printNoEmployeesMsg();
 		}
-		
+		scanner.nextLine();
 	}
 
-	public void addEmployee(){
-		AddEmployeeView addEmployeeView = new AddEmployeeView();
-		Employee employee = new Employee(addEmployeeView.getName(), addEmployeeView.getSalary());
-		employee.setPhoneNumber(addEmployeeView.getPhoneNumber());
-		//Department department = departmentRepository.getDepartmentByName(addEmployeeView.getDepartment());
-		//if (department!=null) {
-		//	employee.setDepartmentId(department.getId());
-		//}
-		employeeRepository.create(employee);
-	}
-	
 	private Collection<Employee> findEmployeesByName(String name, Collection<Employee> employees){
 		Collection<Employee> result = new ArrayList<Employee>();
 		if (name == null || "".equals(name)) return result;

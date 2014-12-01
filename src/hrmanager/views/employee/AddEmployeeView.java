@@ -1,57 +1,26 @@
 package hrmanager.views.employee;
 
-import hrmanager.models.Department;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Collection;
-import java.util.UUID;
+import hrmanager.views.BaseView;
 
-
-public class AddEmployeeView {
-	private UUID id;
-	private String name;
-	private String departmentName;
-	
-	public AddEmployeeView(){
-		try {
-			getUserInput();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public String getName() {
-		return name;
-	}
-
-	public String getDepartment() {
-		return departmentName;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public double getSalary() {
-		return salary;
-	}
-
-	private String phoneNumber;
-	private double salary;
-
-	private void getUserInput() throws IOException {
-		System.out.println("\n");
+public class AddEmployeeView extends BaseView {
+	public void printEditEmployeeName() {
 		System.out.println("Please enter employee name:");
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		name = br.readLine();
+	}
+
+	public void printEditEmployeeSalary() {
 		System.out.println("Please enter employee salary:");
-		salary = Double.parseDouble(br.readLine());
+	}
+
+	public void printEditEmployeePhone() {
 		System.out.println("Please enter employee phone number:");
-		phoneNumber = br.readLine();
+	}
+
+	public void printEditEmployeeDepartment() {
 		System.out.println("Please enter employee department name:");
-		departmentName = br.readLine();
+	}
+
+	public void printNoSuchDepartmentWarnMsg(){
+		System.out.println("There are no department with such name. The employee does not belong to any department");
 	}
 }

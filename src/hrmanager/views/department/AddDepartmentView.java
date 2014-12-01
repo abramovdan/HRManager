@@ -11,21 +11,7 @@ public class AddDepartmentView {
 	private String chiefName;
 	
 	public AddDepartmentView() {
-		try {
-			getUserInput();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	private void getUserInput() throws IOException{
-		System.out.println("\n");
-		System.out.println("Please enter department name:");
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		name = br.readLine();
-		System.out.println("Please enter chief name:");
-		chiefName = br.readLine();
+
 	}
 
 	public String getName() {

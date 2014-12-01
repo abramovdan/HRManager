@@ -1,29 +1,23 @@
 package hrmanager.views.employee;
 
+import hrmanager.views.BaseView;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class DeleteEmployeeView {
-	private String employeeName;
-	
-	public DeleteEmployeeView(){
-		try {
-			getUserInput();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public String getName(){
-		return employeeName;
-	}
-	
-	private void getUserInput() throws IOException {
-		System.out.println("\n");
+public class DeleteEmployeeView extends BaseView {
+	public void printDeleteEmployeeName(){
 		System.out.println("Please enter employee name to delete");
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		employeeName = br.readLine();
+	}
+
+	public void printNoSuchEmployeeWarnMsg(){
+		System.out.println("There are no employees with such name.");
+		printContinueMsg();
+	}
+
+	public void printOperationCompleted() {
+		System.out.println("Delete operation was completed successfully.");
+		printContinueMsg();
 	}
 }

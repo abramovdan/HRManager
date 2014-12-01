@@ -13,11 +13,11 @@ public class Employee extends SimpleEntity {
 	private String name;
 	private UUID departmentId;
 	private String phoneNumber;
-	private double salary;
+	private long salary;
 	
 	public Employee(){}
 	
-	public Employee(String name, double salary) {
+	public Employee(String name, long salary) {
 		this.name = name;
 		this.salary = salary;
 	}
@@ -46,11 +46,11 @@ public class Employee extends SimpleEntity {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public double getSalary() {
+	public long getSalary() {
 		return salary;
 	}
 
-	public void setSalary(double salary) {
+	public void setSalary(long salary) {
 		this.salary = salary;
 	}
 

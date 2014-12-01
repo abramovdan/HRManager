@@ -63,22 +63,20 @@ public class JsonRepository<T extends SimpleEntity> implements Repository<T> {
 
 	@Override
 	public void delete(T entity) {
-		if (entityClass.isAnnotationPresent(JsonDependent.class)){
-			Class[] classes = entityClass.getAnnotation(JsonDependent.class).value();
-			for (Class cl : classes) {
-				Repository<SimpleEntity> repository = new JsonRepository<SimpleEntity>(cl);
-				Collection<SimpleEntity> itemsToDelete = repository.findByParent(entity.getId());
-				for (SimpleEntity itemToDelete : itemsToDelete) {
-					repository.delete(itemToDelete);
-				}
-			}
-		}
 		File file = getEntityFile(entity);
 		if (file.exists()) {
 			file.delete();
 		}
+		Class[] classes = getEntityDependentClasses();
+		for (Class cl : classes) {
+			Repository<SimpleEntity> repository = new JsonRepository<SimpleEntity>(cl);
+			Collection<SimpleEntity> itemsToDelete = repository.findByParent(entity.getId());
+			for (SimpleEntity itemToDelete : itemsToDelete) {
+				repository.delete(itemToDelete);
+			}
+		}
 	}
-	
+
 	@Override
 	public Collection<T> findByParent(UUID parentUUID) {
 		Collection<T> result = new ArrayList<T>();
@@ -90,6 +88,13 @@ public class JsonRepository<T extends SimpleEntity> implements Repository<T> {
 		return result;
 	}
 	
+	private Class[] getEntityDependentClasses() {
+		if (entityClass.isAnnotationPresent(JsonDependent.class)){
+			return entityClass.getAnnotation(JsonDependent.class).value();
+		}
+		return new Class[] {};
+	}
+
 	private File getEntityFile(T entity) {
 		String path = getEntityDirPath();
 		File file = new File(JSON_CONTAINER_DIR + File.separator + path + File.separator + entity.getId() + ".json");
