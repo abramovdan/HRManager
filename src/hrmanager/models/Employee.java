@@ -1,9 +1,8 @@
 package hrmanager.models;
 
-import java.util.UUID;
-
 import javax.validation.constraints.NotNull;
 
+import hrmanager.helpers.UUIDWrapper;
 import repository.annotations.JsonDAO;
 
 @JsonDAO(path="employees")
@@ -11,7 +10,7 @@ public class Employee extends SimpleEntity {
 	
 	@NotNull(message = "Name must be not null")
 	private String name;
-	private UUID departmentId;
+	private UUIDWrapper departmentId;
 	private String phoneNumber;
 	private long salary;
 	
@@ -30,11 +29,11 @@ public class Employee extends SimpleEntity {
 		this.name = name;
 	}
 
-	public UUID getDepartmentId() {
+	public UUIDWrapper getDepartmentId() {
 		return departmentId;
 	}
 
-	public void setDepartmentId(UUID departmentId) {
+	public void setDepartmentId(UUIDWrapper departmentId) {
 		this.departmentId = departmentId;
 	}
 
@@ -55,12 +54,12 @@ public class Employee extends SimpleEntity {
 	}
 
 	@Override
-	public UUID getParentId() {
+	public UUIDWrapper getParentId() {
 		return getDepartmentId();
 	}
 	
 	@Override
-	public void setParentId(UUID parentId){
+	public void setParentId(UUIDWrapper parentId){
 		setDepartmentId(parentId);
 	}
 

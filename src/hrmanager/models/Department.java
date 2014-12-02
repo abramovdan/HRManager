@@ -1,7 +1,6 @@
 package hrmanager.models;
 
-import java.util.UUID;
-
+import hrmanager.helpers.UUIDWrapper;
 import repository.annotations.JsonDAO;
 import repository.annotations.JsonDependent;
 
@@ -9,7 +8,7 @@ import repository.annotations.JsonDependent;
 @JsonDependent({Employee.class})
 public class Department extends SimpleEntity {
 	private String name;
-	private UUID chiefId;
+	private UUIDWrapper chiefId;
 
 	public String getName() {
 		return name;
@@ -19,16 +18,16 @@ public class Department extends SimpleEntity {
 		this.name = name;
 	}
 
-	public UUID getChiefId() {
+	public UUIDWrapper getChiefId() {
 		return chiefId;
 	}
 
-	public void setChief(UUID chiefId) {
+	public void setChief(UUIDWrapper chiefId) {
 		this.chiefId = chiefId;
 	}
 
 	@Override
-	public UUID getParentId() {
+	public UUIDWrapper getParentId() {
 		return null;
 	}
 }

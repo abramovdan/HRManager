@@ -1,30 +1,32 @@
 package hrmanager.models;
 
-import java.util.UUID;
 
+import hrmanager.helpers.UUIDWrapper;
+
+import java.util.UUID;
 
 public abstract class SimpleEntity
 {
-	protected UUID id;
-	protected UUID parentId;
+	protected UUIDWrapper id;
+	protected UUIDWrapper parentId;
 
 	public SimpleEntity(){
-		id = UUID.randomUUID();
+		id = new UUIDWrapper(UUID.randomUUID());
 	}
 
-	public UUID getId(){
+	public UUIDWrapper getId(){
 		return id;
 	}
 	
-	public void setId(UUID uuid){
-		this.id = uuid; 
+	public void setId(UUIDWrapper UUIDWrapper){
+		this.id = UUIDWrapper;
 	}
 
-	public UUID getParentId(){
+	public UUIDWrapper getParentId(){
 		return parentId;
 	};
 	
-	public void setParentId(UUID parentIt){
+	public void setParentId(UUIDWrapper parentId){
 		this.parentId = parentId;
 	}
 }

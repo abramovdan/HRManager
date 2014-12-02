@@ -1,9 +1,9 @@
 package repository;
 
+import hrmanager.helpers.UUIDWrapper;
 import hrmanager.models.SimpleEntity;
 
 import java.io.*;
-import java.lang.reflect.Type;
 import java.util.*;
 
 import org.apache.commons.io.*;
@@ -35,8 +35,10 @@ public class JsonRepository<T extends SimpleEntity> implements Repository<T> {
 			try {
 				json = FileUtils.readFileToString(f);
 				JSONObject jsonObject = JSONObject.fromObject(json);
-				T entity = (T) JSONObject.toBean( jsonObject, jsonConfig); 
-				entity.setId(UUID.fromString(FilenameUtils.removeExtension(f.getName())));
+				Map classMap = new HashMap();
+				classMap.put("[\\w]*id", UUIDWrapper.class);
+				T entity = (T) JSONObject.toBean(jsonObject, entityClass, classMap);
+				//entity.setId(UUID.fromString(FilenameUtils.removeExtension(f.getName())));
 				entities.add(entity);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -78,7 +80,7 @@ public class JsonRepository<T extends SimpleEntity> implements Repository<T> {
 	}
 
 	@Override
-	public Collection<T> findByParent(UUID parentUUID) {
+	public Collection<T> findByParent(UUIDWrapper parentUUID) {
 		Collection<T> result = new ArrayList<T>();
 		for (T entity : entities()) {
 			if (parentUUID.equals(entity.getParentId())){
