@@ -8,22 +8,19 @@ import java.util.UUID;
 public class UUIDWrapper {
     private UUID uuid;
     public UUIDWrapper(){
-
+        uuid = UUID.randomUUID();
     }
+
     public UUIDWrapper(UUID uuid){
         this.uuid = uuid;
     }
 
     public void setId(String id) {
-        if (id == null) {
-            uuid = null;
-        } else {
-            uuid = UUID.fromString(id);
-        }
+        if (id == null) return;
+        uuid = UUID.fromString(id);
     }
 
     public String getId() {
-        if (uuid == null) return null;
         return uuid.toString();
     }
 
@@ -33,7 +30,16 @@ public class UUIDWrapper {
         if (obj == this) return true;
         if (!(obj instanceof UUIDWrapper)) return false;
         UUIDWrapper other = (UUIDWrapper)obj;
-        if (uuid == null) return false;
         return uuid.equals(other.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return uuid.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return uuid.toString();
     }
 }
