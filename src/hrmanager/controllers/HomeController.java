@@ -4,7 +4,9 @@ import hrmanager.enums.Command;
 import hrmanager.models.*;
 import hrmanager.views.*;
 import hrmanager.views.department.AddDepartmentView;
+import hrmanager.views.department.DeleteDepartmentView;
 import hrmanager.views.department.DepartmentsView;
+import hrmanager.views.department.EditDepartmentView;
 import hrmanager.views.employee.AddEmployeeView;
 import hrmanager.views.employee.DeleteEmployeeView;
 import hrmanager.views.employee.EditEmployeeView;
@@ -39,21 +41,29 @@ public class HomeController {
 			case ADDEMPLOYEE:
 				addEmployee();
 				break;
+
+			case ADDDEPARTMENT:
+				addDepartment();
+				break;
 				
 			case DELETEEMPLOYEE:
 				deleteEmployee();
+				break;
+
+			case DELETEDEPARTMENT:
+				deleteDepartment();
 				break;
 			
 			case EDITEMPLOYEE:
 				editEmployee();
 				break;
-				
-			case SHOWEMPLOYEES:
-				showEmployees();
+
+			case EDITDEPARTMENT:
+				editDepartment();
 				break;
 
-			case ADDDEPARTMENT:
-				AddDepartment();
+			case SHOWEMPLOYEES:
+				showEmployees();
 				break;
 
 			case SHOWDEPARTMENTS:
@@ -83,7 +93,7 @@ public class HomeController {
 		return new Scanner(System.in);
 	}
 	
-	private void AddDepartment() {
+	private void addDepartment() {
 		AddDepartmentView view = new AddDepartmentView();
 		Scanner scanner = getScanner();
 		Department department = new Department();
@@ -103,6 +113,8 @@ public class HomeController {
 			department.setChiefId(null);
 		}
 		departmentRepository.create(department);
+		view.printOperationCompleted();
+		scanner.nextLine();
 	}
 
 	public void addEmployee() {
@@ -183,6 +195,40 @@ public class HomeController {
 		scanner.nextLine();
 	};
 
+	private void editDepartment() {
+		EditDepartmentView view = new EditDepartmentView();
+		Scanner scanner = getScanner();
+
+		view.printEditTargetDepartmentName();
+		String targetName = scanner.next();
+		Collection<Department> departmentsToEdit = findDepartmentByName(targetName, departmentRepository.entities());
+		if (!departmentsToEdit.iterator().hasNext()) {
+			view.printNoSuchDepartmentWarnMsg();
+			scanner.nextLine();
+			return;
+		}
+
+		Department department = departmentsToEdit.iterator().next();
+
+		view.printEditDepartmentName();
+		String name = scanner.next();
+		department.setName(name);
+
+		view.printEditDepartmentChiefName();
+		String chiefName = scanner.next();
+		scanner.nextLine();
+
+		Collection<Employee> foundedEmployees = findEmployeesByName(chiefName, employeeRepository.entities());
+		if (foundedEmployees.size() > 0) {
+			department.setChiefId(foundedEmployees.iterator().next().getId());
+		} else {
+			department.setChiefId(null);
+		}
+		departmentRepository.update(department);
+		view.printOperationCompleted();
+		scanner.nextLine();
+	}
+
 	private void deleteEmployee() {
 		DeleteEmployeeView view = new DeleteEmployeeView();
 		Scanner scanner = getScanner();
@@ -204,6 +250,27 @@ public class HomeController {
 		scanner.nextLine();
 	};
 
+	private void deleteDepartment() {
+		DeleteDepartmentView view = new DeleteDepartmentView();
+		Scanner scanner = getScanner();
+		view.printDeleteDepartmentName();
+
+		String targetName = scanner.next();
+		Collection<Department> departmentsToDelete = findDepartmentByName(targetName, departmentRepository.entities());
+		if (!departmentsToDelete.iterator().hasNext()){
+			view.printNoSuchDepartmentWarnMsg();
+			scanner.nextLine();
+			return;
+		}
+
+		Department targetDepartment = departmentsToDelete.iterator().next();
+		for (Department department : departmentsToDelete) {
+			departmentRepository.delete(department);
+		}
+		view.printOperationCompleted();
+		scanner.nextLine();
+	}
+
 	private void showEmployees() {
 		Collection<Employee> employees = employeeRepository.entities();
 		Scanner scanner = getScanner();
@@ -215,8 +282,6 @@ public class HomeController {
 		}
 		scanner.nextLine();
 	}
-
-
 
 	private Collection<Employee> findEmployeesByName(String name, Collection<Employee> employees){
 		Collection<Employee> result = new ArrayList<Employee>();

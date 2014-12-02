@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import hrmanager.models.Department;
+import hrmanager.views.BaseView;
 
-public class AddDepartmentView {
+public class AddDepartmentView extends BaseView {
 
 	public void printEditDepartmentName() {
 		System.out.println("Please enter department name");
