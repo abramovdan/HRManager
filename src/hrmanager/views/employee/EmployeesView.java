@@ -1,5 +1,7 @@
 package hrmanager.views.employee;
 
+import hrmanager.helpers.UUIDWrapper;
+import hrmanager.models.Department;
 import hrmanager.models.Employee;
 import hrmanager.views.BaseView;
 
@@ -10,9 +12,11 @@ import java.util.Scanner;
 
 public class EmployeesView extends BaseView {
 	private Collection<Employee> employees;
+	private Collection<Department> departments;
 
-	public EmployeesView(Collection<Employee> employees){
+	public EmployeesView(Collection<Employee> employees, Collection<Department> departments){
 		this.employees = employees;
+		this.departments = departments;
 	}
 
 	public void printEmployees(){
@@ -29,18 +33,27 @@ public class EmployeesView extends BaseView {
 	}
 	
 	private void showTitle(){
-		System.out.printf("%-15s", "Employee name");
-		System.out.printf("%-15s", "Phone number");
-		System.out.printf("%-15s", "Department"); //TODO: show department name here
-		System.out.printf("%-15s", "Salary");
+		System.out.printf("%-20s", "Employee name");
+		System.out.printf("%-20s", "Phone number");
+		System.out.printf("%-20s", "Department");
+		System.out.printf("%-20s", "Salary");
 		System.out.println();
 	}
 	
 	private void showEmployeeInfo(Employee employee){
-		System.out.printf("%-15s", employee.getName());
-		System.out.printf("%-15s", employee.getPhoneNumber());
-		System.out.printf("%-15s", employee.getDepartmentId()); //TODO: show department name here
-		System.out.printf("%-15d", employee.getSalary());
+		System.out.printf("%-20s", employee.getName());
+		System.out.printf("%-20s", employee.getPhoneNumber());
+		System.out.printf("%-20s", getDepartmentNameById(employee.getDepartmentId()));
+		System.out.printf("%-20d", employee.getSalary());
 		System.out.println();
+	}
+
+	private String getDepartmentNameById(UUIDWrapper id){
+		if (id!=null) {
+			for (Department department : departments) {
+				if (department.getId().equals(id)) return department.getName();
+			}
+		}
+		return "no department";
 	}
 }

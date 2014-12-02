@@ -4,6 +4,7 @@ import hrmanager.enums.Command;
 import hrmanager.models.*;
 import hrmanager.views.*;
 import hrmanager.views.department.AddDepartmentView;
+import hrmanager.views.department.DepartmentsView;
 import hrmanager.views.employee.AddEmployeeView;
 import hrmanager.views.employee.DeleteEmployeeView;
 import hrmanager.views.employee.EditEmployeeView;
@@ -50,11 +51,15 @@ public class HomeController {
 			case SHOWEMPLOYEES:
 				showEmployees();
 				break;
-				//TODO: other commands
+
 			case ADDDEPARTMENT:
 				AddDepartment();
 				break;
-				
+
+			case SHOWDEPARTMENTS:
+				showDepartments();
+				break;
+
 			default:
 				break;
 			}
@@ -62,21 +67,40 @@ public class HomeController {
 		
 	}
 
+	private void showDepartments() {
+		Collection<Department> departments = departmentRepository.entities();
+		Scanner scanner = getScanner();
+		DepartmentsView view = new DepartmentsView(departments, employeeRepository.entities());
+		if (departments.size() > 0){
+			view.printDepartments();
+		} else {
+			view.printNoDepartmentsMsg();
+		}
+		scanner.nextLine();
+	}
+
 	private Scanner getScanner() {
 		return new Scanner(System.in);
 	}
 	
 	private void AddDepartment() {
-		AddDepartmentView addDepartmentView = new AddDepartmentView();
-		//add fields validation
+		AddDepartmentView view = new AddDepartmentView();
+		Scanner scanner = getScanner();
 		Department department = new Department();
-		department.setName(addDepartmentView.getName());
-		Collection<Employee> foundedEmployees = findEmployeesByName(addDepartmentView.getChiefName(), employeeRepository.entities());
+
+		view.printEditDepartmentName();
+		String name = scanner.next();
+		department.setName(name);
+
+		view.printEditDepartmentChiefName();
+		String chiefName = scanner.next();
+		scanner.nextLine();
+
+		Collection<Employee> foundedEmployees = findEmployeesByName(chiefName, employeeRepository.entities());
 		if (foundedEmployees.size() > 0) {
-			department.setChief(foundedEmployees.iterator().next().getId());
+			department.setChiefId(foundedEmployees.iterator().next().getId());
 		} else {
-			//add validation error
-			department.setChief(null);
+			department.setChiefId(null);
 		}
 		departmentRepository.create(department);
 	}
@@ -183,7 +207,7 @@ public class HomeController {
 	private void showEmployees() {
 		Collection<Employee> employees = employeeRepository.entities();
 		Scanner scanner = getScanner();
-		EmployeesView view = new EmployeesView(employees);
+		EmployeesView view = new EmployeesView(employees, departmentRepository.entities());
 		if (employees.size() > 0){
 			view.printEmployees();
 		} else {
@@ -191,6 +215,8 @@ public class HomeController {
 		}
 		scanner.nextLine();
 	}
+
+
 
 	private Collection<Employee> findEmployeesByName(String name, Collection<Employee> employees){
 		Collection<Employee> result = new ArrayList<Employee>();

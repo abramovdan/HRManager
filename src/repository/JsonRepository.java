@@ -8,10 +8,8 @@ import java.util.*;
 
 import org.apache.commons.io.*;
 
-import repository.annotations.JsonDAO;
-import repository.annotations.JsonDependent;
+import repository.annotations.*;
 import net.sf.json.*;
-import net.sf.json.util.PropertyFilter;
 
 public class JsonRepository<T extends SimpleEntity> implements Repository<T> {
 
@@ -29,7 +27,7 @@ public class JsonRepository<T extends SimpleEntity> implements Repository<T> {
 		if (!dir.exists()) return entities;
 
 		Map classMap = new HashMap();
-		classMap.put("[\\w]*id", UUIDWrapper.class);
+		classMap.put("[\\w]*[iI]d", UUIDWrapper.class);
 		for (File f : FileUtils.listFiles(dir, new String[] {"json"}, false)) {
 			String json;
 			try {

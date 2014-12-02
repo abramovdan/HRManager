@@ -22,7 +22,7 @@ public class Department extends SimpleEntity {
 		return chiefId;
 	}
 
-	public void setChief(UUIDWrapper chiefId) {
+	public void setChiefId(UUIDWrapper chiefId) {
 		this.chiefId = chiefId;
 	}
 

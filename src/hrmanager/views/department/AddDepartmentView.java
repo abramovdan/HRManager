@@ -7,19 +7,12 @@ import java.io.InputStreamReader;
 import hrmanager.models.Department;
 
 public class AddDepartmentView {
-	private String name;
-	private String chiefName;
-	
-	public AddDepartmentView() {
 
+	public void printEditDepartmentName() {
+		System.out.println("Please enter department name");
 	}
 
-	public String getName() {
-		return name;
+	public void printEditDepartmentChiefName() {
+		System.out.println("Please enter department chief name");
 	}
-	
-	public String getChiefName() {
-		return chiefName;
-	}
-
 }
