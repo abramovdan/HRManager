@@ -17,11 +17,9 @@ public class JsonRepository<T extends SimpleEntity> implements Repository<T> {
 
 	public static final String JSON_CONTAINER_DIR = "json_dir";
 	private Class<T> entityClass;
-	private JsonConfig jsonConfig; 
 		
 	public JsonRepository(Class<T> entityClass) {
 		this.entityClass = entityClass;
-		initJsonConfig();
 	}
 
 	@Override
@@ -29,16 +27,15 @@ public class JsonRepository<T extends SimpleEntity> implements Repository<T> {
 		List<T> entities = new ArrayList<T>();
 		File dir = new File(JSON_CONTAINER_DIR + File.separator + getEntityDirPath());
 		if (!dir.exists()) return entities;
-		
+
+		Map classMap = new HashMap();
+		classMap.put("[\\w]*id", UUIDWrapper.class);
 		for (File f : FileUtils.listFiles(dir, new String[] {"json"}, false)) {
 			String json;
 			try {
 				json = FileUtils.readFileToString(f);
 				JSONObject jsonObject = JSONObject.fromObject(json);
-				Map classMap = new HashMap();
-				classMap.put("[\\w]*id", UUIDWrapper.class);
 				T entity = (T) JSONObject.toBean(jsonObject, entityClass, classMap);
-				//entity.setId(UUID.fromString(FilenameUtils.removeExtension(f.getName())));
 				entities.add(entity);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -112,19 +109,6 @@ public class JsonRepository<T extends SimpleEntity> implements Repository<T> {
 			return entityClass.getSimpleName();
 		}
 		return entityClass.getAnnotation(JsonDAO.class).path();
-	}
-	
-	private void initJsonConfig() {
-		jsonConfig= new JsonConfig();
-		jsonConfig.setRootClass( entityClass );  
-		jsonConfig.setJavaPropertyFilter( new PropertyFilter(){  
-		   public boolean apply( Object source, String name, Object value ) {  
-		      if( "id".equals( name )){  
-		         return true;  
-		      }  
-		      return false;  
-		   }  
-		}); 
 	}
 	
 	private JSON toJSON(T entity) {
